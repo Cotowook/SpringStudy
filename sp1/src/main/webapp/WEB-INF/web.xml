@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd" id="WebApp_ID" version="6.0">
+  <display-name>sp1</display-name>
+  
+  <!-- 스프링 웹 애플리케이션의 루트 컨텍스트를 초기화하는 설정 -->
+  <!-- 스프링 웹 애플리케이션 시 시 자동으로 구동시키는 역할 -->
+   <listener>
+   	<!-- 서블릿 컨테이너(Tomcat등)가 웹 애플리케이션으 시작할 때 실행되는 리스너 -->
+   	<!-- contextConfigLocation에 지정된 root-context.xml 설정 파일을 로드 -->
+   	<!-- 스프링의 Root ApplicationContext(부모 컨텍스트)를 생성 -->
+  	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  
+  <!-- 리스너에게 전달되는 초기화 파라미터 -->
+  <!-- 컨테이너를 띄울때 이 xml을 읽어라 라고 지정되는 것 -->
+  <context-param>
+  	<param-name>contextConfigLocation</param-name>
+  	<param-value>/WEB-INF/spring/root-context.xml</param-value>
+  </context-param>
+  
+  <!-- Spring MVC의 프론트 컨트롤러를 등록하는 설정 -->
+  <!-- DispatherServlet은 웹 요청을 모두 받아서 Sping MVC로 위임하는 핵심 템플릿 -->
+   <servlet>
+  	<servlet-name>appServlet</servlet-name>
+  	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  	<init-param>
+  		<param-name>contextConfigLocation</param-name>
+  		<param-value>/WEB-INF/spring/servlet-context.xml</param-value>
+  	</init-param>
+  	<load-on-startup>1</load-on-startup> 	
+  </servlet>
+  
+  <!-- DispatherServletㅇ 어떤 URL 요청을 처리할시   -->
+  <servlet-mapping>
+  	<servlet-name>appServlet</servlet-name>
+  	<url-pattern>/</url-pattern>
+  </servlet-mapping>
+  
+  
+  
+  
+  <!-- welcom 루트 요청시 자동으로 보여줄 기본 파일을 지정하는 서블릿 컨체이너의 설명이며, SpringController에선  -->
+  
+</web-app>
