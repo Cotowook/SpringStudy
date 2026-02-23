@@ -2,15 +2,26 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
-
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd	
+		http://mybatis.org/schema/mybatis-spring
+	  	http://mybatis.org/schema/mybatis-spring.xsd
+	  	http://www.springframework.org/schema/aop 
+    https://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+	  	">
 	<!-- 해당 패키지를 스캔할 것을 지정 
 		스프링이 시작할 때 해당 패키지에 있는 클래스들을 스캔하면서 
 		@Service 어노테이션이 존재하는 클래스를 찾아서 객체를 생성하고 이를 Bean으로 등록
 	 -->	
 	<context:component-scan base-package="org.zerock.service" />
+	<context:component-scan base-package="org.zerock.aop" />
 	
 	<!-- bean definitions here -->
 	<!-- hikariConfig 클래스의 객체를 생성하여 빈으로 등록 -->
@@ -29,4 +40,21 @@
 	    <constructor-arg ref="hikariConfig"/>
 	</bean>
 
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean">
+	    <property name="dataSource" ref="dataSource"></property>
+	    <property name="mapperLocations" value="classpath:/mapper/*.xml"/>
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	    <property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<tx:annotation-driven/>
+	
+	<!-- Spring AOP에서 자동으로 Proxy 객체를 생성하라는 의미 -->
+	<!-- @Aspect로 정의된 클래스와 메소드들을 인식 => 타겟 객체와 결합해 자동으로 프록시 객체 생성. AOP가 적용 가능한 빈은 모두 프록시로 감싸짐 -->
+	<!-- 프록시 객체 = 실제 객체를 감싸서(대리) 호출을 제어하는 객체 -->
+	<aop:aspectj-autoproxy/>
+
+	<mybatis-spring:scan base-package="org.zerock.mapper"/>
 </beans>

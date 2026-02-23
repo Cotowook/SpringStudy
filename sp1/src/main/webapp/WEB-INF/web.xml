@@ -36,9 +36,6 @@
   	<url-pattern>/</url-pattern>
   </servlet-mapping>
   
-  
-  
-  
   <!-- welcom 루트 요청시 자동으로 보여줄 기본 파일을 지정하는 서블릿 컨체이너의 설명이며, SpringController에선  -->
   
 </web-app>
