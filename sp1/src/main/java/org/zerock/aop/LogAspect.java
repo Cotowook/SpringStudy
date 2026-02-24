@@ -36,18 +36,19 @@ public class LogAspect {
 	
 	@Around("execution(* org.zerock.service.*.*(..))")
 	public Object logTime(ProceedingJoinPoint pjp) throws Throwable {
-		log.info("-------");
-		log.info("logTime()");
+		log.info("-------------------------");
+		log.info("logTimes");
 		
 		long start = System.currentTimeMillis();
 		
-		pjp.proceed(); // @Around는 이 코드를 직접 호출해야 타겟 메소드가 실제로 실행됨
+		Object result = pjp.proceed();
 		
 		long end = System.currentTimeMillis();
 		
-		log.info("-------");
-		log.info("TIME : " + (end-start));
-		return null;
+		log.info("-------------------------");
+		log.info("TIME: " + (end - start));
+		
+		return result;
 	}
 	
 }

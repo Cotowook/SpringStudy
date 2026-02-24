@@ -9,8 +9,45 @@
      	</div>
      
      	<div class="card-body">
-      
-     	</div>
+				<div class="mb-3 input-group input-group-lg">
+			    <span class="input-group-text">Bno</span>
+			    <input type="text" class="form-control" value="<c:out value="${boardDTO.bno}" />" readonly>
+			  </div>
+			
+			  <div class="mb-3 input-group input-group-lg">
+			    <span class="input-group-text">Title</span>
+			    <input type="text" name="title" class="form-control" value="<c:out value="${boardDTO.title}" />" readonly>
+			  </div>
+			
+			  <div class="mb-3 input-group input-group-lg">
+			    <span class="input-group-text">Content</span>
+			    <textarea class="form-control" name="content" rows="3" readonly><c:out value="${boardDTO.content}" /></textarea>
+			  </div>
+			
+			  <div class="mb-3 input-group input-group-lg">
+			    <span class="input-group-text">Writer</span>
+			    <input type="text" name="writer" class="form-control" value="<c:out value="${boardDTO.writer}" />" readonly>
+			  </div>
+			
+			  <div class="mb-3 input-group input-group-lg">
+			    <span class="input-group-text">RegDate</span>
+			    <input type="text" name="regDate" class="form-control" value="<c:out value="${boardDTO.createdDate}" />" readonly>
+			  </div>
+			
+			  <div class="float-end">
+			  	<a href="/board/list">
+			    	<button type="button" class="btn btn-info btnList">LIST</button>
+			    </a>
+			    
+			    <c:if test="${!boardDTO.delFlag}">
+			    	<a href="/board/modify/${boardDTO.bno}">
+			    		<button type="button" class="btn btn-warning btnModify">MODIFY</button>
+			    	</a>
+			    </c:if>
+			  </div>
+			  
+			</div>
+			
    	</div>
   </div>
 </div>

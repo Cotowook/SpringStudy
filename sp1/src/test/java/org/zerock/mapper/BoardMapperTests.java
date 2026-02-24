@@ -86,4 +86,15 @@ public class BoardMapperTests {
 		dtoList.stream().forEach(board->log.info(board));
 		// 메소드 참조 사용시 : dtoList.stream().forEach(log::info);
 	}
+	
+	@Test
+	public void testList2() {
+		int page = 2;
+		int count = 10;
+		int skip = (page - 1) * count;
+		
+		List<BoardDTO> dtoList = boardMapper.list2(skip, count);
+		
+		dtoList.stream().forEach(board->log.info(board));
+	}
 }
