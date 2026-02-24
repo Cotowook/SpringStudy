@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zerock.mapper.BoardMapper">
+	<insert id="insert">
+		<!-- keyProperty : insert가 완료된 후, DB에서 조회한 PK값을 저장할 객체(DTO)의 필드 이름을 지정 -->
+		<!-- resultType : 조회할 키 값 타입 -->
+		<!-- order : <selectKey> 구문을 INSERT 실행 후에 실행하라는 의미 -->
+		<selectKey keyProperty="bno" resultType="Long" order="AFTER" >
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		
+		INSERT INTO tbl_board (title, content, writer)
+		VALUES( #{title}, #{content}, #{writer} )
+	</insert>
+	
+	<!-- resultType : 쿼리 실행 결과를 어떤 타입으로 매핑할 것인지 지정 -->
+	<select id="selectOne" resultType="BoardDTO">
+		SELECT * FROM tbl_board 
+		WHERE bno = #{bno} 	
+	</select>
+
+	<update id="remove">	<!-- 논리적 삭제 : 실제 삭제는 하지 않고, 삭제 표시만 해두는 경우 -->
+		UPDATE tbl_board SET delflag = TRUE
+		WHERE bno = #{bno}
+	</update>
+	
+	<update id="update">	<!-- 논리적 삭제 : 실제 삭제는 하지 않고, 삭제 표시만 해두는 경우 -->
+		UPDATE tbl_board 
+		SET 
+			title = #{title}, 
+			content = #{content}, 
+			updatedate = now(), 
+			delflag = #{delFlag}
+		WHERE bno = #{bno}
+	</update>
+	
+	<select id="list">
+		SELECT bno, title, writer, regdate 
+		FROM tbl_board
+		WHERE delflag = FALSE
+		ORDER BY bno DESC 
+	</select>
+	
+</mapper>

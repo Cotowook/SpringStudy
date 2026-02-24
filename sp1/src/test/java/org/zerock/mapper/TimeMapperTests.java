@@ -11,7 +11,7 @@ import lombok.extern.log4j.Log4j2;
 @ExtendWith(SpringExtension.class) 
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml") 
 @Log4j2
-public class TimeMapperTest {
+public class TimeMapperTests {
 	@Autowired
 	private TimeMapper timeMapper; 
 	

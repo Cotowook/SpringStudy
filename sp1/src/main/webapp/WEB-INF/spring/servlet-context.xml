@@ -23,6 +23,7 @@
 	    <property name="suffix" value=".jsp"/>
 	</bean>
 
+	<mvc:resources mapping="/resources/**" location="/resources/" /> <!-- resouces 경로에 대한 모든 요청 처리. 정적 리소스들을 그대로 응답 -->
 
 </beans>
 

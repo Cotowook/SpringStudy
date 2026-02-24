@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 타입 별칭은 자바 타입에 대한 짧은 이름, 타이핑을 줄이기 위해 존재 
+		예: org.zerock.dto.BoardDTO => BoardDTO만으로도 사용가능 
+	-->
+	<settings>	<!-- MyBatis는 이름이 동일한 경우만 자동매핑. 대소문자는 무시 -->
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+	</settings>
+	
+	<typeAliases>
+		<package name="org.zerock.dto"/> <!-- 해당 패키지의 모든 클래스는 자동으로 alias 등록 -->
+	</typeAliases>
+
+</configuration>

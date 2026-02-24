@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
-
 	<!-- Appender, Layout 설정 -->
 	<!-- Appender : 로그를 어디로 보낼지(출력할지) 결정 Layout: 로그 형식을 어떻게 만들지 결정 -->
 	<Appenders>
-		<!-- Console appender를 하나 정의 name : console target : 표준 출력으로 찍음(표준 에러로 
-			찍으려면 SYSTEM_ERR) -->
+		<!-- Console appender를 하나 정의 name : console target : 표준 출력으로 찍음(표준 에러로 찍으려면 SYSTEM_ERR) -->
 		<Console name="console" target="SYSTEM_OUT">
 			<!-- pattern : 콘솔에 loggerName location LEVEL message 형식으로 출력 -->
 			<PatternLayout pattern="%c %l %5p %m%n" />
