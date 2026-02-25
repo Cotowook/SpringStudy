@@ -11,6 +11,24 @@
 			</div>
 
 			<div class="card-body">
+			
+				<div class="d-flex justify-content-end" style="margin-bottom: 2em">
+					<div style="width: 50%;" class="d-flex">
+						<select name="typeSelect" class="form-select form-control me-2">
+							<option value="T" ${dto.types == 'T' ? 'selected' : ''}>제목</option>
+					   	<option value="C" ${dto.types == 'C' ? 'selected' : ''}>내용</option>
+					   	<option value="W" ${dto.types == 'W' ? 'selected' : ''}>작성자</option>
+					   	<option value="TC" ${dto.types == 'TC' ? 'selected' : ''}>제목 OR 내용</option>
+					   	<option value="TW" ${dto.types == 'TW' ? 'selected' : ''}>제목 OR 작성자</option>
+					   	<option value="TCW" ${dto.types == 'TCW' ? 'selected' : ''}>제목 OR 내용 OR 작성자</option>
+						</select>
+						
+						<input type="text" class="form-control me-2" name="keywordInput" value="<c:out value='${dto.keyword}'/>" />
+						
+						<button class="btn btn-outline-info searchBtn">Search</button>
+					</div>
+				</div>
+			
 				<table class="table table-bordered" id="dataTable">
 					<thead>
 						<tr>
@@ -37,6 +55,30 @@
 
 					</tbody>
 				</table>
+				
+				<div class="d-flex justify-content-center">
+					<ul class="pagination">
+				  	<c:if test="${dto.prev}">
+				    	<li class="page-item">
+				      	<a class="page-link" href="${dto.start - 1}" tabindex="-1">Previous</a>
+				      </li>
+				    </c:if>
+				    
+				    <c:forEach var="num" items="${dto.pageNums}">
+				      <li class="page-item ${dto.page == num ? 'active' : ''}">
+				      	<a class="page-link" href="${num}">${num}</a>
+				      </li>
+				    </c:forEach>
+				
+				    <c:if test="${dto.next}">
+				      <li class="page-item">
+				      	<a class="page-link" href="${dto.end + 1}">Next</a>
+				      </li>
+				    </c:if>
+				  </ul>
+				  
+				</div>
+				
 			</div>
 
 		</div>
@@ -70,6 +112,51 @@
 	if (result) {
 		myModal.show();
 	}
+	
+	// 페이지 번호 클릭 이벤트 처리
+	const pagingDiv = document.querySelector(".pagination");
+
+	// 이벤트 버블링에 의해 클릭 이벤트가 전파됨
+	pagingDiv.addEventListener("click", (e) => {
+		e.preventDefault();	// 기본 동작 막기 => a 태그의 기본 동작인 href 값으로 페이지 이동 및 새로고침 방생 막음
+		e.stopPropagation();	// 이벤트 전파 막기 => 상위 클릭 로직을 차단하기 위한 방어 코드로 상위 이벤트가 있을 때만 의미 있음(선택적으로 적용)
+		
+		const target = e.target;	// console.log(target);
+		const targetPage = target.getAttribute("href");
+		const size = ${dto.size} || 10; // BoardListPagingDTO의 size
+		
+		const params = new URLSearchParams({	// URLSearchParams : 안전하게 URL 쿼리 스트림을 생성, 조작하기 위한 표준 API 
+			 page: targetPage,
+			 size: size
+		}); // 내부적으로 key = value 형태로 직렬화하고 인코딩을 수행 => 문자열 연결방식 더 안전함(깨짐, 인코딩 누락 위험이 낮음) ex) page=3&size=10
+	
+		
+		const types = '${dto.types}';
+		const keyword= '${dto.keyword}';
+		
+		if(types && keyword){
+			params.set('types', types);
+			params.set('keyword', keyword);
+		}
+		
+		location.href = `/board/list?` + params.toString();
+		
+	});
+	
+	
+	document.querySelector(".searchBtn").addEventListener('click', e => {
+		const keyword = document.querySelector("input[name='keywordInput']").value;
+		const types = document.querySelector('select[name="typeSelect"]').value;
+		
+		const params = new URLSearchParams({
+			types,
+			keyword
+		});
+		
+		location.href = '/board/list?' + params.toString();
+	});
+	
+	
 </script>
 
 <%@include file="/WEB-INF/views/includes/footer.jsp"%>

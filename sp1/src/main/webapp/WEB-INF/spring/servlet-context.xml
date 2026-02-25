@@ -23,6 +23,9 @@
 	    <property name="suffix" value=".jsp"/>
 	</bean>
 
+	<!-- SpringMVC에서 MultipartFile을 사용하기 위해 설정 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver"/>
+
 	<mvc:resources mapping="/resources/**" location="/resources/" /> <!-- resouces 경로에 대한 모든 요청 처리. 정적 리소스들을 그대로 응답 -->
 
 </beans>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zerock.mapper.ReplyMapper">
+	<insert id="insert">
+		<selectKey keyProperty="rno" resultType="Long" order="AFTER" >
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+
+		INSERT INTO tbl_reply (bno, replyText, replyer)
+		VALUES (	#{bno}, #{replyText}, #{replyer}	)
+	</insert>
+
+</mapper>

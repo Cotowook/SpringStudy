@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class BoardListPagingDTO {
-	private final int BLOCK_SIZE = 10;
+	private static final int BLOCK_SIZE = 10;
 	
 	private List<BoardDTO> boardDTOList;	// 게시물 목록
 	private int totalCount;	// 전체 데이터 개수
@@ -26,17 +26,26 @@ public class BoardListPagingDTO {
 	private boolean next;
 	private List<Integer> pageNums;
 	
-	public BoardListPagingDTO(List<BoardDTO> boardDTOList, int totalCount, int page, int size) {
+	// 검색 관련 추가
+	private String types;
+	private String keyword;
+	
+	public BoardListPagingDTO(List<BoardDTO> boardDTOList, int totalCount, int page, int size,
+			String types, String keyword) {
 		super();
 		this.boardDTOList = boardDTOList;
 		this.totalCount = totalCount;
 		this.page = page;
 		this.size = size;
-
+		// 검색관련 추가 필드
+		this.types = types;
+		this.keyword = keyword;
+		
 		// start 계산을 위한 tempEnd 페이지 
 		// tempEnd : 현재 블록의 마지막 페이지(임시)
-		int tempEnd = (int) (Math.ceil(page / BLOCK_SIZE * 1.0)) * BLOCK_SIZE; // 10.0, 10 은 패이지 블록을 의미함
-		this.start = tempEnd - (BLOCK_SIZE - 1);
+		int tempEnd = (int) (Math.ceil(page / (BLOCK_SIZE * 1.0))) * 10; // 10.0, 10 은 패이지 블록을 의미함
+		// 
+		this.start = tempEnd - (BLOCK_SIZE - 1); 
 		this.prev = start != 1;
 
 		// 정확한 end 페이지 번호 계산 

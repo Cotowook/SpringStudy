@@ -22,16 +22,19 @@ public class BoardService {
 		return boardMapper.list();
 	}
 
-	public BoardListPagingDTO getList(int page, int size){ // 게시물 목록 조회 + 페이징 처리 : 현재 페이지의 번호와 화면에 필요한 데이터를 개수를 파라미터로 전달받아
+	public BoardListPagingDTO getList(int page, int size, String typeStr, String keyword){ // 게시물 목록 조회 + 페이징 처리 : 현재 페이지의 번호와 화면에 필요한 데이터를 개수를 파라미터로 전달받아
 		// Mapper의 list2()와 listCount() 호출
 		page = page <= 0 ? 1 : page;
 		size = (size < 10 || size > 100) ? 10 : size;
 		int skip = (page - 1) * size;
 		
-		List<BoardDTO> list = boardMapper.list2(skip, size);
-		int total = boardMapper.listCount();
 		
-		return new BoardListPagingDTO(list, total, page, size);
+		String[] types = (typeStr != null && !typeStr.isBlank() ) ? typeStr.split("") : null;
+		
+		List<BoardDTO> list = boardMapper.listSearch(skip, size, types, keyword);
+		int total = boardMapper.listCountSearch(types, keyword);
+		
+		return new BoardListPagingDTO(list, total, page, size, typeStr, keyword);
 	}
 
 	public Long register(BoardDTO dto) { // 등록 기능을 작성하고, 추가된 게시물의 번호를 반환하도록 구성

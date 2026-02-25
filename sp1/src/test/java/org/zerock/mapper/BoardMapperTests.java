@@ -97,4 +97,22 @@ public class BoardMapperTests {
 		
 		dtoList.stream().forEach(board->log.info(board));
 	}
+	
+	@Test
+	public void testListSearch() {
+		int page = 2;
+		int count = 10;
+		int skip = (page - 1) * count;
+		
+		// 동적 쿼리 실행 확인 => 빈 문자열, null 의 경우 로그 확인
+		String[] types = {"T", "C", "W"};
+		//String[] types = null;
+		
+		String keyword = "Test";	
+		//String keyword = null; 
+		//String keyword = "";
+		
+		boardMapper.listSearch(skip, count, types, keyword);
+		
+	}
 }
