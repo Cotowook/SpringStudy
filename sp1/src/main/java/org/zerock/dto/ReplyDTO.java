@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReplyDTO {
 	private Long rno;
-	private String replyText;
+	private String replytext;
 	private String replyer;
 	private LocalDateTime replyDate;
 	private LocalDateTime updateDate;

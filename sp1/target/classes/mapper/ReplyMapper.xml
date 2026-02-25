@@ -8,8 +8,42 @@
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 
-		INSERT INTO tbl_reply (bno, replyText, replyer)
-		VALUES (	#{bno}, #{replyText}, #{replyer}	)
+		INSERT INTO tbl_reply (bno, replytext, replyer)
+		VALUES (	#{bno}, #{replytext}, #{replyer}	)
 	</insert>
-
+	
+	<select id="read" resultType="ReplyDTO">
+		SELECT * 
+		FROM tbl_reply
+		WHERE bno = #{bno}
+	</select>
+	
+	<update id="update">
+		UPDATE tbl_reply 
+		SET replytext = #{replytext}
+		WHERE rno = #{rno}
+	</update>
+	
+	<update id="delete">
+		UPDATE tbl_reply 
+		SET 
+			delflag = TRUE, 
+			replytext = '삭제된 댓글입니다.',
+			replyer = 'unknown'
+		WHERE rno = #{rno}
+	</update>
+	
+	<select id="listOfBoard">
+		SELECT * FROM tbl_reply
+		WHERE	bno = #{bno}
+		ORDER BY rno 
+		LIMIT #{limit} OFFSET #{skip}
+	</select>
+	
+	<select id="countOfBoard">
+		SELECT COUNT(rno)
+		FROM tbl_reply
+		WHERE bno = #{bno}
+	</select>
+	
 </mapper>
