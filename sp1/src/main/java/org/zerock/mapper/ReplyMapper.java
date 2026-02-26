@@ -8,7 +8,7 @@ import org.zerock.dto.ReplyDTO;
 public interface ReplyMapper {
 	int insert(ReplyDTO dto);
 	
-	ReplyDTO read(@Param("bno") Long bno);
+	ReplyDTO read(@Param("rno") Long rno);
 	
 	int update(ReplyDTO dto);
 	

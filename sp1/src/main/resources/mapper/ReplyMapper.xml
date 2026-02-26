@@ -15,7 +15,7 @@
 	<select id="read" resultType="ReplyDTO">
 		SELECT * 
 		FROM tbl_reply
-		WHERE bno = #{bno}
+		WHERE rno = #{rno}
 	</select>
 	
 	<update id="update">
