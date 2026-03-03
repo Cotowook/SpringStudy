@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zerock.mapper.ProductMapper">
+	<insert id="insert">
+		<!-- 새롭개 만들어진 상품의 번호로 이미지를 추가하기 위함 -->
+		<selectKey keyProperty="pno" resultType="Integar" order="AFTER">
+			SELECT LAST_INSERT_ID();			
+		</selectKey>
+		
+		INSERT INTO tbl_product (pname, pdesc, price, sale, writer)
+		VALUES (	#{pname}, #{pdesc}, #{price}, TRUE, #{writer}	)
+	</insert>
+	
+	<insert id="insertImage">
+		INSERT INTO tbl_product_image (pno, filename, uuid, ord)
+		VALUES (
+			<foreach collection="imageList" item ="image" separator=",">
+			#{pno}, #{image.filename}, #{image.uuid}, #{image.ord}	)
+			</foreach>
+	</insert>
+</mapper>
