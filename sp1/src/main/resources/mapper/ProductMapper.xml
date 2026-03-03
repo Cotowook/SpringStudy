@@ -4,20 +4,55 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.zerock.mapper.ProductMapper">
 	<insert id="insert">
-		<!-- 새롭개 만들어진 상품의 번호로 이미지를 추가하기 위함 -->
-		<selectKey keyProperty="pno" resultType="Integar" order="AFTER">
-			SELECT LAST_INSERT_ID();			
+		<selectKey keyProperty="pno" resultType="Integer" order="AFTER">
+			SELECT LAST_INSERT_ID()
 		</selectKey>
 		
-		INSERT INTO tbl_product (pname, pdesc, price, sale, writer)
-		VALUES (	#{pname}, #{pdesc}, #{price}, TRUE, #{writer}	)
+		INSERT INTO tbl_product (pname, pdesc, price, sale, writer) 
+		VALUES (#{pname}, #{pdesc}, #{price}, TRUE, #{writer})
+	</insert>
+
+	<insert id="insertImages">
+		INSERT INTO tbl_product_image (pno, filename, uuid, ord) 
+		VALUES
+			<foreach collection="imageList" item="image" separator=",">
+				(#{pno}, #{image.fileName}, #{image.uuid}, #{image.ord})
+			</foreach> 
 	</insert>
 	
-	<insert id="insertImage">
-		INSERT INTO tbl_product_image (pno, filename, uuid, ord)
-		VALUES (
-			<foreach collection="imageList" item ="image" separator=",">
-			#{pno}, #{image.filename}, #{image.uuid}, #{image.ord}	)
-			</foreach>
-	</insert>
+	<!-- 조회 결과를 ProductDTO로 매핑 -->
+	<resultMap type="ProductDTO" id="selectMap">
+		<!-- <id />: 객체를 구성하는 기준으로 MyBatis가 같은 Product인지 중복을 판단 
+			JOIN 결과에서 중복 ProductDTO 생성을 방지	 =>  pno가 동일하면 기존 객체를 재사용하고, ino 기준으로 이미지 추가 -->
+		<id property="pno" column="pno"	/>
+		<result	property="pname" column="pname"	/>
+		<result	property="pdesc" column="pdesc"	/>
+		<result	property="price" column="price"	/>
+		<result	property="sale" column="sale"	/>
+		<result	property="writer" column="writer"	/>
+		
+		<!-- 다수의 상품 이미지 결과를 List<ProductImageDTO>로 매핑 -->
+		<collection property="imageList" ofType="ProductImageDTO">
+			<id	property="ino" column="ino"	/>
+			<result	property="uuid" column="uuid"	/>
+			<result	property="fileName" column="filename"	/>
+			<result	property="ord" column="ord"	/>
+		</collection>
+	</resultMap>
+	
+	<!-- 이렇게 사용할 경우 행 단위로 객체가 만들어지고, 이미지 리스트는 매핑조차 되지 않는다 -->
+	<!-- <select id="selectOne" resultType="ProductDTO"> -->
+	<select id="selectOne" resultMap="selectMap">	
+		SELECT p.pno, pname, pdesc, price, sale, writer, p.regdate, ino, uuid, filename, ord
+		FROM tbl_product P
+		LEFT JOIN tbl_product_image I ON P.pno = I.pno
+		WHERE P.pno = #{pno}
+		ORDER BY I.ord ASC
+	</select>
+	
+	<update id="deleteOne">
+		UPDATE tbl_product 
+		SET sale = FALSE 
+		WHERE pno = #{pno}
+	</update>
 </mapper>
