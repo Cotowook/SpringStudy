@@ -55,4 +55,44 @@
 		SET sale = FALSE 
 		WHERE pno = #{pno}
 	</update>
+	
+	<delete id="deleteImages">
+		DELETE FROM tbl_product_image
+		WHERE pno = #{pno}
+	</delete>
+	
+	<update id="updateOne">
+		UPDATE tbl_product
+		SET 
+			pname = #{pname},
+			pdesc = #{pdesc},
+			price = #{price}
+		WHERE pno = #{pno}	
+	</update>
+	
+	<select id="list" resultType="ProductListDTO">
+		<!-- WHEERE 조건으로 인해 이미지가 없는 상품은 결과에서 제거됨 
+			SELECT  p.pno, pname, pdesc, price, sale, writer, p.regdate, ino, uuid, filename, ord
+			FROM tbl_product P
+			LEFT JOIN tbl_product_image I ON P.pno = I.pno
+			WHERE I.ord = 0
+			ORDER BY P.pno DESC
+			LIMIT #{count} OFFSET #{skip};
+		-->
+		
+		<!-- 개선된 방식 : 이미지가 있으면 ord = 0인 이미지를 가져오고, 없어도 상품 자체는 보여주는 방식 -->
+		SELECT  p.pno, pname, pdesc, price, sale, writer, p.regdate, ino, uuid, filename, ord
+		FROM tbl_product P
+		LEFT JOIN tbl_product_image I 
+			ON P.pno = I.pno AND I.ord = 0  
+		WHERE I.ord = 0
+		ORDER BY P.pno DESC
+		LIMIT #{count} OFFSET #{skip};
+	</select>
+	
+	<select id="listCount" resultType="int">
+		SELECT COUNT(*)
+		FROM tbl_product p 
+	</select>
+	
 </mapper>

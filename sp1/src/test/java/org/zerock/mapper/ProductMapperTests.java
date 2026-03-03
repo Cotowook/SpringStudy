@@ -56,6 +56,62 @@ public class ProductMapperTests {
 	}
 	
 	
+	@Transactional
+	@Commit
+	@Test
+	public void testUpdateOne() {
+		ProductDTO productDTO = ProductDTO.builder()
+				.pno(1)
+				.pname("update product")
+				.pdesc("update product desc")
+				.price(6000)
+				.build();
+		
+		productDTO.addImage(UUID.randomUUID().toString() , "test3.jpg");
+		productDTO.addImage(UUID.randomUUID().toString() , "test4.jpg");
+		productDTO.addImage(UUID.randomUUID().toString() , "test5.jpg");
+
+		// 1. 기존 이미지 삭제 
+		productMapper.deleteImages(productDTO.getPno());
+		
+		// 2. 상품 정보 수정
+		productMapper.updateOne(productDTO);
+
+		// 3. 상품 이미지 갱신 
+		productMapper.insertImages(productDTO);
+		
+	} 
 	
+	@Transactional
+	@Commit
+	@Test
+	public void testInsertDummies() {
+		for(int i=0; i<45; i++) {
+			ProductDTO productDTO = ProductDTO.builder()
+					.pname("Dummy Product " + i)
+					.pdesc("Dummy Product Desc" + i)
+					.writer("user" + (i%10))
+					.price(4000)
+					.build();
+			
+			// 상품 테이블에 등록
+			productMapper.insert(productDTO);
+			
+			// 상품 이미지 테이블에 등록
+			productDTO.addImage(UUID.randomUUID().toString() , i + "_test_1.jpg");
+			productDTO.addImage(UUID.randomUUID().toString() , i + "_test_2.jpg");
+			
+			productMapper.insertImages(productDTO);
+		}
+		
+	}
+	
+	
+	@Test
+	public void testList() {
+		productMapper.list(0, 10).forEach(log::info);
+		
+		log.info(productMapper.listCount());
+	}
 	
 }

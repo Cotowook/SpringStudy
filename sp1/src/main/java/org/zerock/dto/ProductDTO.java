@@ -42,5 +42,7 @@ public class ProductDTO {
 		
 	}
 	
-	
+	public void clearImage() {
+		imageList.clear();
+	}
 }
