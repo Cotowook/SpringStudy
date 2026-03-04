@@ -87,6 +87,64 @@ public class ProductController {
 		return "/product/read";
 	}
 	
+	@GetMapping("/modify/{pno}")
+	public String modifyGET(
+			@PathVariable("pno") Integer pno, 
+			Model model) {
+		
+		log.info(pno);
+		
+		model.addAttribute("product", productService.read(pno));
+		
+		return "/product/modify";
+	}
+	
+	@PostMapping("/modify")
+	public String modifyPOST(
+			ProductDTO productDTO,
+			@RequestParam(name = "oldImages", required = false) String[] oldImages,	// 기존 이미지를 다 지울 경우를 대비 
+			@RequestParam("files") MultipartFile[] files ) {
+
+		List<String> newFileNames = uploadFiles(files); // 새로 추가된 파일 업로드
+ 		
+		// oldImages
+		if(oldImages != null && oldImages.length > 0) {
+			for(String oldImage : oldImages) {
+			String uuid = oldImage.substring(0,36);
+			String fileName = oldImage.substring(37);
+			
+			productDTO.addImage(uuid, fileName);
+			}
+		}
+			
+		// newImages
+		if(newFileNames != null && newFileNames.size() > 0) {
+			for(String newImage : newFileNames) {
+			String uuid = newImage.substring(0,36);
+			String fileName = newImage.substring(37);
+			
+			productDTO.addImage(uuid, fileName);
+			}
+		}
+		
+		productService.modify(productDTO);
+		
+		return "redirect:/product/read/" + productDTO.getPno();
+	}
+	
+	
+	
+	@PostMapping("/remove")
+	public String remove(
+			@RequestParam("pno") Integer pno,
+			RedirectAttributes rttr) {
+		productService.remove(pno);
+		
+		rttr.addFlashAttribute("result", "deleted");	
+	
+		return "redirect:/product/list";
+	}
+	
 	// 파일 업로드 기능 
 	private List<String> uploadFiles(MultipartFile[] files) throws RuntimeException { // throws 생략 가능 -> 자동으로 예외가 전파됨
 		List<String> uploadNames = new ArrayList<String>();

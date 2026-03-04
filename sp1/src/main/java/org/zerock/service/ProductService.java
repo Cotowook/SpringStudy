@@ -46,5 +46,22 @@ public class ProductService {
 		return productMapper.selectOne(pno);
 	}
 	
+	public void remove(Integer pno) {
+		productMapper.deleteOne(pno);
+		
+	}
+	
+	public void modify(ProductDTO productDTO) {
+		// 1. 기존 이미지 삭제 
+		productMapper.deleteImages(productDTO.getPno());
+		
+		// 2. 상품 정보 수정
+		productMapper.updateOne(productDTO);
+		
+		// 3. 상품 이미지 갱신
+		
+		if(productDTO.getImageList() != null && !productDTO.getImageList().isEmpty())
+			productMapper.insertImages(productDTO);
+	}
 	
 }
