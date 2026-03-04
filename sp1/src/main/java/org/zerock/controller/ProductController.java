@@ -4,16 +4,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID; 
+import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.dto.ProductDTO;
+import org.zerock.dto.ProductListPagingDTO;
+import org.zerock.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,6 +29,8 @@ import net.coobird.thumbnailator.Thumbnails;
 @Log4j2
 @RequiredArgsConstructor
 public class ProductController {
+	private final ProductService productService;
+	
 	
 	@GetMapping("/register")
 	public void registerGET() {
@@ -53,7 +60,31 @@ public class ProductController {
 			productDTO.addImage(uuid, fileName);
 		});
 		
+		Integer pno = productService.register(productDTO);
+		rttr.addFlashAttribute("pno", pno);	// 등록, 수정, 삭제 후 1회성 메세지 메세지 전달
+		
 		return "redirect:/product/list";
+	}
+	
+	@GetMapping("/list")
+	public void list(
+			@RequestParam(name = "page", defaultValue = "1") int page,
+			@RequestParam(name = "size", defaultValue = "10") int size,
+			Model model
+			) {
+		ProductListPagingDTO dto = productService.getList(page, size);
+		
+		model.addAttribute("dto", dto);
+	}
+	
+	@GetMapping("/read/{pno}")
+	public String read(
+			@PathVariable("pno") Integer pno, 
+			Model model) {
+		
+		model.addAttribute("dto", productService.read(pno));
+		
+		return "/product/read";
 	}
 	
 	// 파일 업로드 기능 
