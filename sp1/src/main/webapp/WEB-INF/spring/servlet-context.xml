@@ -4,12 +4,17 @@
 	   xmlns:mvc="http://www.springframework.org/schema/mvc"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:security="http://www.springframework.org/schema/security"
+	   
 	   xsi:schemaLocation="
 			http://www.springframework.org/schema/beans
 			https://www.springframework.org/schema/beans/spring-beans.xsd
 			http://www.springframework.org/schema/mvc
 			https://www.springframework.org/schema/mvc/spring-mvc.xsd
 			http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+			
+			http://www.springframework.org/schema/security
+			https://www.springframework.org/schema/security/spring-security.xsd
 			">
 
 	<!-- MVC 관련 어노테이션을 해석 및 실행하도록 필요한 인프라 Bean을 자동 등록 -->
@@ -32,6 +37,10 @@
 	<!-- 브라우저에서 /images/** 경로로 요청이 오면 서버의 C:/upload/ 디렉토리에서 파일을 찾아 그대로 응답. 컨트롤러는 거치지 않음 -->
 	<!-- file: 파일 시스템을 의미하는 접두사 <중요!>  -->
 	<mvc:resources mapping="/images/**" location="file:C:/upload/" />
+
+	<security:global-method-security pre-post-annotations="enabled" />
+	<!-- 메소드 실행 전에 권한을 체크하는 @PreAuthorize / 실행 후 체크하는 @PostAuthorzie 어노테이션으로 권한 허용 -->
+
 
 </beans>
 

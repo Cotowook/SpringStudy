@@ -2,6 +2,7 @@ package org.zerock.controller;
 
 import java.lang.ProcessBuilder.Redirect;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -84,6 +85,23 @@ public class HelloController {
 	@GetMapping("/ex8")
 	public void ex8() {
 		log.info("/sample/ex8");
+	}
+	
+	
+	@GetMapping("access-denied")
+	public String accessDenied() {
+		return "/sample/accessDenied";
+	}
+	
+	 @PreAuthorize("hasRole('ADMIN')") // 내부적으로 "ROLE_" 붙음 
+	// @PreAuthorize("hasRole('MANAGER')")
+	// @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+	// @PreAuthorize("hasAuthority('ROLE_ADNIN')") 주어진 문자열 그대로 붙임
+	@GetMapping("/ex9")
+	public void ex9() {
+		log.info("/sample/ex9");
+		
+		hellowService.hello1();
 	}
 	
 	

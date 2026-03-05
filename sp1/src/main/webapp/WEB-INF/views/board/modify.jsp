@@ -27,7 +27,7 @@
 				
 				  <div class="mb-3 input-group input-group-lg">
 				    <span class="input-group-text">Writer</span>
-				    <input type="text" class="form-control" value="<c:out value="${boardDTO.writer}" />" readonly>
+				    <input type="text" class="form-control" name="writer" value="<c:out value="${boardDTO.writer}" />" readonly>
 				  </div>
 				
 				  <div class="mb-3 input-group input-group-lg">

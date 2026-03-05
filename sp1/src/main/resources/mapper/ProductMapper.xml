@@ -85,7 +85,6 @@
 		FROM tbl_product P
 		LEFT JOIN tbl_product_image I 
 			ON P.pno = I.pno AND I.ord = 0  
-		WHERE I.ord = 0
 		ORDER BY P.pno DESC
 		LIMIT #{count} OFFSET #{skip};
 	</select>
