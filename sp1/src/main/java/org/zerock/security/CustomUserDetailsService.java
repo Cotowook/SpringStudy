@@ -5,13 +5,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.zerock.dto.AccountDTO;
-import org.zerock.dto.AccountRole;
+import org.zerock.mapper.AccountMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Service
 @Log4j2
-public class CustomUserDetailsService implements UserDetailsService{
+@RequiredArgsConstructor
+public class CustomUserDetailsService implements UserDetailsService {
+	private final AccountMapper accountMapper ;
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		log.info("---------------- loadUserByUsername ----------------");
@@ -25,12 +29,19 @@ public class CustomUserDetailsService implements UserDetailsService{
 		 */
 		
 		// 임시로 AccountDTO를 직접 만들어 사용
-		AccountDTO accountDTO = new AccountDTO();
+		/*
+		 * AccountDTO accountDTO = new AccountDTO(); accountDTO.setUid(username);
+		 * accountDTO.setUpw(
+		 * "$2a$10$QGIhCPCG7O4IEgMAxgweWeuPCUSIPlmJYiDr/axdDd/602EYbh4Xi");
+		 * accountDTO.addRole(AccountRole.USER);
+		 * accountDTO.addRole(AccountRole.MANAGER);
+		 */
 		
-		accountDTO.setUid(username);
-		accountDTO.setUpw("$2a$10$QGIhCPCG7O4IEgMAxgweWeuPCUSIPlmJYiDr/axdDd/602EYbh4Xi");
-		accountDTO.addRole(AccountRole.USER);
-		accountDTO.addRole(AccountRole.MANAGER);
+		AccountDTO accountDTO = accountMapper.selectOne(username);
+		
+		if(accountDTO == null) {
+			throw new UsernameNotFoundException("Account Not Found");
+		}
 		
 		return accountDTO;
 	}
